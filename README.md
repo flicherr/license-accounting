@@ -182,8 +182,8 @@ Employee records can be created or updated through a dedicated form containing s
 ├── Properties/
 │   ├── Resources.Designer.cs
 │   └── Resources.resx
-├── backup_db/
-│   └── dump_accounting_28.01.2024.sql
+├── database/
+│   └── accounting-demo.sql
 ├── src/
 │   ├── deleteButton.png
 │   ├── insertButton.png
@@ -226,15 +226,15 @@ Npgsql `8.0.1` is restored through NuGet.
 
 ## Database setup
 
-The file:
+The repository includes a demo database backup:
 
 ```text
-backup_db/dump_accounting_28.01.2024.sql
+database/accounting-demo.sql
 ```
 
-is a **PostgreSQL custom-format database dump**, despite its `.sql` extension.
+The `.sql` extension is kept for the existing project file, but the file itself is a **PostgreSQL custom-format dump** and must be restored with `pg_restore`, not executed with `psql`.
 
-For a simple local setup, create an empty `accounting` database and restore the dump without owner and ACL metadata:
+For a simple local setup, create an empty `accounting` database and restore the backup without owner and ACL metadata:
 
 ```bash
 createdb -U postgres accounting
@@ -243,7 +243,7 @@ pg_restore \
   --no-owner \
   --no-acl \
   -d accounting \
-  backup_db/dump_accounting_28.01.2024.sql
+  database/accounting-demo.sql
 ```
 
 Using `--no-acl` is the easiest portable setup because PostgreSQL roles are cluster-level objects and are not created by a normal database dump.
@@ -283,7 +283,7 @@ pg_dump
 pg_restore
 ```
 
-The bundled custom-format dump contains the database schema, PL/pgSQL routines, triggers, permissions metadata, and sample records used by the project.
+The bundled `database/accounting-demo.sql` file is a custom-format PostgreSQL backup containing the demo database used by the project, including its schema, PL/pgSQL routines, triggers, and sample records.
 
 For a public repository, make sure any committed dump contains only synthetic data and test license keys.
 
